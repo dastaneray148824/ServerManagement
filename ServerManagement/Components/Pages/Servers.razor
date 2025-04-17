@@ -35,6 +35,8 @@
 
 <br/>
 
+
+
 <div class="input-group mb-3">
 
     <input type="text" class="form-control" placeholder="Search Servers" @bind-value="serverFilter"
@@ -45,58 +47,21 @@
 
 <br/>
 
+<ServerListComponent @rendermode="InteractiveServer" CityName="@this.selectedCity"></ServerListComponent>
+
 
 
 <ServerComponent @rendermode="InteractiveServer"></ServerComponent> <!--partial view-->
 
-<ul class ="list-group mb-4">
-    <!--Virtualize Items="this.servers" Context="server">
-        </Virtualize> çok fazla veriyi aynı anda güncellemesin sistem sıkışmasın
---> 
-    @foreach (var server in servers)
-    {
-        <li class="d-flex justify-content-between align-items-center mb-3" @key="server.ServerId">
-            @server.Name in @server.City 
-            <span style="color :@((server.IsOnline ? "green" : "red"))">@(server.IsOnline ? "online" : "offline")
-
-            </span>
-            &nbsp;
-            <a href="/servers/edit/@server.ServerId" class="btn btn-link">Edit</a>
-
-            <button type="button" class="btn btn-primary" @onclick="(() => { DeleteServer(server.ServerId); })">Delete</button>
-            <!--blazor özle built kolaylaştırma 
-            <EditForm
-
-            Model="server"
-            FormName="@($"form-server-{server.ServerId}")"
-            OnValidSubmit="@(() => { DeleteServer(server.ServerId); })">
-            <button type="submit" class="btn btn-primary">Delete</button>
-
-            </EditForm>
-            -->
-        </li>
-    }
-
-</ul>
 
 <a href="/servers/add" class="btn btn-link">Add Server</a>
 
-<p>
-    <button class=" btn btn-secondary"
-    @onclick="@(() =>
-{
-    this.servers.Insert(0,new Server {Name = "ServerA", City ="Toronto"});
-})">
-        Add server 2
-    </button>
-</p>
 
 
 
 
 
 @code {
-    private List<Server> servers = new List<Server>();
 
     private List<string> cities = CitiesRepository.GetCities();
 
@@ -108,25 +73,16 @@
         set
         {
             _serverFilter = value;
-            this.servers = ServersRepository.SearchServers(serverFilter);
+           // this.servers = ServersRepository.SearchServers(serverFilter);
         }
         }
 
 
-    private void DeleteServer(int serverId)
-    {
-        if (serverId > 0)
-        {
-            ServersRepository.DeleteServer(serverId);
-            this.servers = ServersRepository.GetServersByCity(selectedCity); //serversa atadık uı kısmında anlık yenileyip city leri getirmesi için
-
-        }
-    }
 
     private void SelectCity(string SelectedCityName)
     {
         this.selectedCity = SelectedCityName;
-        this.servers= ServersRepository.GetServersByCity(selectedCity);
+      //  this.servers= ServersRepository.GetServersByCity(selectedCity);
 
     }
 
@@ -138,7 +94,7 @@
 
     private void HandleSearch()
     {
-        this.servers= ServersRepository.SearchServers(serverFilter);
+        //this.servers= ServersRepository.SearchServers(serverFilter);
         this.selectedCity=String.Empty;
     }
 

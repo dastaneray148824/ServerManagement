@@ -1,6 +1,6 @@
-﻿
+﻿@inject NavigationManager NavigationManager
 
-@if (server != null)
+@if (Server != null)
 {
     <!---<EditForm Model="server" FormName="serverComponent" OnSubmit="ChangeServerStatus">
         
@@ -17,11 +17,27 @@
 
     </EditForm>
     -->
-    <div data-name="@server.Name" data-status="Server is @(server.IsOnline ? "online" : "offline")" style="color:@(server.IsOnline ? "green" : "red")">
-        @server.Name is in @server.City that is @(server.IsOnline ? "online" : "offline")
+    <li class="d-flex justify-content-between align-items-center mb-3" @key="Server.ServerId">
+        @Server.Name in @Server.City
+        <span style="color :@((Server.IsOnline ? "green" : "red"))">
+            @(Server.IsOnline ? "online" : "offline")
+
+        </span>
         &nbsp;
-        <button type="button" class="btn btn-primary"@onclick="ChangeStatus">Turn On/off</button>
-    </div>
+        <a href="/servers/edit/@Server.ServerId" class="btn btn-link">Edit</a>
+
+        <button type="button" class="btn btn-primary" @onclick="(() => { DeleteServer(Server.ServerId); })">Delete</button>
+        <!--blazor özle built kolaylaştırma
+            <EditForm
+
+            Model="server"
+            FormName="@($"form-server-{server.ServerId}")"
+            OnValidSubmit="@(() => { DeleteServer(server.ServerId); })">
+            <button type="submit" class="btn btn-primary">Delete</button>
+
+            </EditForm>
+            -->
+    </li>
 
 }
 
@@ -29,14 +45,19 @@
 
 @code {
 
-    [SupplyParameterFromForm] //blazor formdan gelenleri server modeline inject eder
-    private Server? server { get; set; } = new Server { Name = "Server 1", City = "Toronto" };
+    //[SupplyParameterFromForm] //blazor formdan gelenleri server modeline inject eder
+    [Parameter]
+    public Server? Server { get; set; } 
 
-    private void ChangeStatus()
+    private void DeleteServer(int serverId)
     {
-        if (server != null)
+        if (serverId > 0)
         {
-            server.IsOnline = !server.IsOnline;
+            ServersRepository.DeleteServer(serverId);
+            //this.servers = ServersRepository.GetServersByCity(selectedCity);
+            ////serversa atadık uı kısmında anlık yenileyip city leri getirmesi için
+            NavigationManager.NavigateTo("/servers", true);
+
         }
     }
 
