@@ -1,0 +1,58 @@
+﻿
+
+@if (server != null)
+{
+    <!---<EditForm Model="server" FormName="serverComponent" OnSubmit="ChangeServerStatus">
+        
+          <InputNumber @bind-Value="server.ServerId" hidden></InputNumber>
+        <InputText @bind-Value="server.Name" hidden></InputText>
+        <InputText @bind-Value="server.City" hidden></InputText>
+        <InputCheckbox @bind-Value="server.IsOnline" hidden></InputCheckbox>
+        <div data-name="@server.Name" data-status="Server is @(server.IsOnline ? "online" : "offline")" style="color:@(server.IsOnline ? "green" : "red")">
+            @server.Name is in @server.City that şs @(server.IsOnline ? "online" : "offline")
+            &nbsp;
+            <button type="submit" class="btn btn-primary">Turn On</button>
+        </div>
+
+
+    </EditForm>
+    -->
+    <div data-name="@server.Name" data-status="Server is @(server.IsOnline ? "online" : "offline")" style="color:@(server.IsOnline ? "green" : "red")">
+        @server.Name is in @server.City that is @(server.IsOnline ? "online" : "offline")
+        &nbsp;
+        <button type="button" class="btn btn-primary"@onclick="ChangeStatus">Turn On/off</button>
+    </div>
+
+}
+
+
+
+@code {
+
+    [SupplyParameterFromForm] //blazor formdan gelenleri server modeline inject eder
+    private Server? server { get; set; } = new Server { Name = "Server 1", City = "Toronto" };
+
+    private void ChangeStatus()
+    {
+        if (server != null)
+        {
+            server.IsOnline = !server.IsOnline;
+        }
+    }
+
+    //protected override void OnParametersSet()
+   // {
+      //  server ??= new Server { Name = "Server 1", City = "Toronto" };
+    //}
+
+    /* private void ChangeServerStatus()
+     {
+         if (server != null)
+         {
+             server.IsOnline = !server.IsOnline;
+         }
+     }
+
+ 
+ */
+}

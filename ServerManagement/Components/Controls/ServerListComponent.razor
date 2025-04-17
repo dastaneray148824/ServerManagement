@@ -1,0 +1,45 @@
+﻿<h3>ServerListComponent</h3>
+
+ul class ="list-group mb-4">
+<!--Virtualize Items="this.servers" Context="server">
+        </Virtualize> çok fazla veriyi aynı anda güncellemesin sistem sıkışmasın
+--> 
+@foreach (var server in servers)
+{
+    <li class="d-flex justify-content-between align-items-center mb-3" @key="server.ServerId">
+        @server.Name in @server.City 
+        <span style="color :@((server.IsOnline ? "green" : "red"))">@(server.IsOnline ? "online" : "offline")
+
+        </span>
+        &nbsp;
+        <a href="/servers/edit/@server.ServerId" class="btn btn-link">Edit</a>
+
+        <button type="button" class="btn btn-primary" @onclick="(() => { DeleteServer(server.ServerId); })">Delete</button>
+        <!--blazor özle built kolaylaştırma 
+            <EditForm
+
+            Model="server"
+            FormName="@($"form-server-{server.ServerId}")"
+            OnValidSubmit="@(() => { DeleteServer(server.ServerId); })">
+            <button type="submit" class="btn btn-primary">Delete</button>
+
+            </EditForm>
+            -->
+    </li>
+}
+
+</ul>
+
+@code {
+    private List<Server> servers = new List<Server>();
+
+    private void DeleteServer(int serverId)
+    {
+        if (serverId > 0)
+        {
+            ServersRepository.DeleteServer(serverId);
+            this.servers = ServersRepository.GetServersByCity(selectedCity); //serversa atadık uı kısmında anlık yenileyip city leri getirmesi için
+
+        }
+    }
+}

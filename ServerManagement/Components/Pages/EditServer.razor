@@ -1,0 +1,94 @@
+﻿@page "/servers/edit/{id:int}"
+@using System.Runtime.CompilerServices
+
+@inject NavigationManager NavigationManager
+<!--dependency injection-->
+<h3>EditServer</h3>
+<br/>
+<br/>
+@if (server != null)
+{
+   
+
+    <EditForm Model="server" FormName="formServer" OnValidSubmit="Submit">
+        <!--hata mesajları-->
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <ValidationSummary></ValidationSummary>
+
+        <InputNumber @bind-Value="server.ServerId" hidden></InputNumber>
+
+        <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Name</label>
+            <InputText @bind-Value="server.Name" class=" form-control"></InputText>
+        </div>
+        <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label">City</label>
+            <InputText @bind-Value="server.City" class="form-control"></InputText>
+        </div>
+        <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label">Online</label>
+            <InputCheckbox @bind-Value="server.IsOnline" class="form-check-input"></InputCheckbox>
+        </div>
+        @if (!string.IsNullOrEmpty(InfoMessage))
+        {
+            <div class="alert alert-warning">@InfoMessage</div>
+        }
+        <br/>
+        <button class="btn btn-primary" type="submit">Submit</button>
+        &nbsp;
+        <a href="/servers" class="btn btn-primary">Close</a>
+
+    </EditForm>
+}
+
+
+
+@code {
+    [Parameter]
+    //id değişkenine atandı
+    public int Id { get; set; }
+    [SupplyParameterFromForm] //formdan bu property'e değer geçmesini sağlıyor
+    private Server? server { get; set; }
+    private string InfoMessage { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        //?? null değilse atama yap , sayfa parametreleri ile gelen id'yi kullanarak server nesnesini bul
+        server ??= ServersRepository.GetServerById(this.Id);
+    }
+
+    private void Submit()
+    {
+
+    
+        try
+        {
+            //eğer kod bitme şansı varsa direk orada kes
+            if (server == null) throw new Exception();
+          
+           
+            var existing = ServersRepository.GetServerById(server.ServerId);
+            // formda değişiklik olmadığını başka nasıl anlarız (DTO)
+            if (existing.Name == server.Name && existing.IsOnline == server.IsOnline && existing.City == server.City)
+            {
+                InfoMessage = "No changes made to the server.";
+                return;
+
+            }
+            ServersRepository.UpdateServer(server.ServerId, server);
+            NavigationManager.NavigateTo("/servers");
+
+        }
+
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+      //  NavigationManager.NavigateTo("/servers");
+        //submit sonrası yönlendirme
+    }
+   
+
+
+}

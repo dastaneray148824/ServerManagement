@@ -1,0 +1,49 @@
+﻿@page "/servers/add"
+
+<h3>AddServer</h3>
+
+<br />
+
+@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+
+<EditForm Model="server" FormName="formServer" OnValidSubmit="Submit">
+    <!--hata mesajları-->
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <ValidationSummary></ValidationSummary>
+
+
+    <div class="mb-3">
+        <label for="exampleFormControlInput1" class="form-label">Name</label>
+        <InputText @bind-Value="server.Name" class=" form-control"></InputText>
+    </div>
+    <div class="mb-3">
+        <label for="exampleFormControlTextarea1" class="form-label">City</label>
+        <InputText @bind-Value="server.City" class="form-control"></InputText>
+    </div>
+    <div class="mb-3">
+        <label for="exampleFormControlTextarea1" class="form-label">Online</label>
+        <InputCheckbox @bind-Value="server.IsOnline" class="form-check-input"></InputCheckbox>
+    </div>
+    <br/>
+    <button class="btn btn-primary" type="submit">Save</button>
+    &nbsp;
+    <a href="/servers" class="btn btn-primary">Close</a>
+
+</EditForm>
+
+@code {
+    //[SupplyParameterFromForm] render mode açtığımızda server nesnesi otomatik doluyor
+    private Server server { get; set; } = new Server() {IsOnline = false};
+
+    private void Submit()
+    {
+        if (server != null)
+        {
+            ServersRepository.AddServer(server);
+
+        }
+        NavigationManager.NavigateTo("/servers");
+        
+    }
+}

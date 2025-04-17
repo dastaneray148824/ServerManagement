@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\images\calgarly j.jpeg" />
+    <Content Remove="wwwroot\images\calgarly.png" />
+    <Content Remove="wwwroot\images\Calgary.png" />
+    <Content Remove="wwwroot\images\Halifax.png" />
+    <Content Remove="wwwroot\images\montreal.png" />
+    <Content Remove="wwwroot\images\Ottawa.png" />
+    <Content Remove="wwwroot\images\toronto.png" />
+  </ItemGroup>
+
+</Project>
