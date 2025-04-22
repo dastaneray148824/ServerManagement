@@ -1,0 +1,31 @@
+﻿@using System.Globalization
+
+
+@if(cities != null && cities.Count > 0)
+{
+    <div class="container-fluid text-center mt-4">
+        <div class="row justify-content-center gx-3 gy-4">
+            @foreach (var city in cities)
+            {
+                <CityComponent city="@city" selectedCity="@selectedCity" SelectCityCallback="HandleCitySelection"></CityComponent>
+            }
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public EventCallback<string> SelectCityCallback { get; set; }
+
+    public void ClearSelection()
+    {
+        this.selectedCity = string.Empty;
+    }
+    private List<string> cities = CitiesRepository.GetCities();
+    private string selectedCity = "Toronto";
+
+    private void HandleCitySelection(string cityName)
+    {
+        selectedCity = cityName;
+        SelectCityCallback.InvokeAsync(cityName);
+    }
+}

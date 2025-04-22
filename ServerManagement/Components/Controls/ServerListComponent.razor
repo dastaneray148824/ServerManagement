@@ -1,13 +1,11 @@
-﻿<h3>ServerListComponent</h3>
-@inject NavigationManager NavigationManager
-
+﻿@inject NavigationManager NavigationManager
 
 @if (this.servers != null && this.servers.Count>0)
 {
     <ul class="list-group mb-4">
         <!--Virtualize Items="this.servers" Context="server">
-    </Virtualize> çok fazla veriyi aynı anda güncellemesin sistem sıkışmasın
-    -->
+        </Virtualize> çok fazla veriyi aynı anda güncellemesin sistem sıkışmasın
+        -->
         @foreach (var server in servers)
         {
             <ServerComponent Server="server"></ServerComponent>
@@ -16,18 +14,23 @@
     </ul>
 }
 
-
-
 @code {
     [Parameter]
     public string? CityName { get; set; }
+
+    [Parameter] public string SearchFilter { get; set; } = "";
 
     private List<Server>? servers;
 
     protected override void OnParametersSet()
     {
-       servers= ServersRepository.GetServersByCity(CityName);
+        if (string.IsNullOrWhiteSpace(this.SearchFilter)) //kullanıcı bir şey aramıyorsa
+        {
+            servers = ServersRepository.GetServersByCity(CityName ?? "Toronto"); //city name yoksa torontoyu getir
+        }
+        else
+        {
+            servers = ServersRepository.SearchServers(this.SearchFilter);
+        }
     }
-
-    
 }

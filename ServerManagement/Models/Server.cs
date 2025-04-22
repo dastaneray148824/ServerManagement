@@ -17,9 +17,7 @@ namespace ServerManagement.Models
         [Required]
         //bir alanın boş geçirilemeyeceğini belirtir
         public string? Name { get; set; }
-        [Required] public string? City { get; set; }
-
-
+        [Required]
+        public string? City { get; set; }
     }
 }
-    

@@ -21,10 +21,12 @@
         @Server.Name in @Server.City
         <span style="color :@((Server.IsOnline ? "green" : "red"))">
             @(Server.IsOnline ? "online" : "offline")
-
         </span>
         &nbsp;
-        <a href="/servers/edit/@Server.ServerId" class="btn btn-link">Edit</a>
+        <button type="button" class="btn btn-sm fw-semibold text-white border-0" @onclick="(() => {Server.IsOnline = !Server.IsOnline ;})" style="background-color:@(Server.IsOnline ? "#dc3545" : "#28a745")">@(Server.IsOnline ? "Turn Off" : "Turn On")</button>
+        &nbsp;
+
+        <button type="button"  class="btn btn-link" @onclick="(() => { editServer = !editServer; })">Edit</button>
 
         <button type="button" class="btn btn-primary" @onclick="(() => { DeleteServer(Server.ServerId); })">Delete</button>
         <!--blazor özle built kolaylaştırma
@@ -37,14 +39,17 @@
 
             </EditForm>
             -->
+        @if (editServer)
+        {
+            <ServerManagement.Components.Pages.EditServer Id="this.Server.ServerId"></ServerManagement.Components.Pages.EditServer>
+        }
     </li>
 
 }
 
-
-
 @code {
 
+    private bool editServer = false;
     //[SupplyParameterFromForm] //blazor formdan gelenleri server modeline inject eder
     [Parameter]
     public Server? Server { get; set; } 

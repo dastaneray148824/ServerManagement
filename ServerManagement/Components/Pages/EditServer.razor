@@ -60,7 +60,6 @@
     private void Submit()
     {
 
-    
         try
         {
             //eğer kod bitme şansı varsa direk orada kes
@@ -73,13 +72,10 @@
             {
                 InfoMessage = "No changes made to the server.";
                 return;
-
             }
             ServersRepository.UpdateServer(server.ServerId, server);
             NavigationManager.NavigateTo("/servers");
-
         }
-
         catch (Exception e)
         {
             Console.WriteLine(e);
@@ -88,7 +84,4 @@
       //  NavigationManager.NavigateTo("/servers");
         //submit sonrası yönlendirme
     }
-   
-
-
 }
