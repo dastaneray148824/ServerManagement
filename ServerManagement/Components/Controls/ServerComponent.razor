@@ -1,23 +1,24 @@
-﻿@inject NavigationManager NavigationManager
+﻿@using System.Diagnostics.Eventing.Reader
+@inject NavigationManager NavigationManager
 
 @if (Server != null)
 {
     <!---<EditForm Model="server" FormName="serverComponent" OnSubmit="ChangeServerStatus">
-        
-          <InputNumber @bind-Value="server.ServerId" hidden></InputNumber>
-        <InputText @bind-Value="server.Name" hidden></InputText>
-        <InputText @bind-Value="server.City" hidden></InputText>
-        <InputCheckbox @bind-Value="server.IsOnline" hidden></InputCheckbox>
-        <div data-name="@server.Name" data-status="Server is @(server.IsOnline ? "online" : "offline")" style="color:@(server.IsOnline ? "green" : "red")">
-            @server.Name is in @server.City that şs @(server.IsOnline ? "online" : "offline")
-            &nbsp;
-            <button type="submit" class="btn btn-primary">Turn On</button>
-        </div>
+
+    <InputNumber @bind-Value="server.ServerId" hidden></InputNumber>
+    <InputText @bind-Value="server.Name" hidden></InputText>
+    <InputText @bind-Value="server.City" hidden></InputText>
+    <InputCheckbox @bind-Value="server.IsOnline" hidden></InputCheckbox>
+    <div data-name="@server.Name" data-status="Server is @(server.IsOnline ? "online" : "offline")" style="color:@(server.IsOnline ? "green" : "red")">
+    @server.Name is in @server.City that şs @(server.IsOnline ? "online" : "offline")
+    &nbsp;
+    <button type="submit" class="btn btn-primary">Turn On</button>
+    </div>
 
 
     </EditForm>
     -->
-    <li class="d-flex justify-content-between align-items-center mb-3" @key="Server.ServerId">
+    <li class="d-flex justify-content-between align-items-center mb-3" @key="Server.ServerId" style="background-color:@GetBackgroundColor()">
         @Server.Name in @Server.City
         <span style="color :@((Server.IsOnline ? "green" : "red"))">
             @(Server.IsOnline ? "online" : "offline")
@@ -25,20 +26,32 @@
         &nbsp;
         <button type="button" class="btn btn-sm fw-semibold text-white border-0" @onclick="(() => {Server.IsOnline = !Server.IsOnline ;})" style="background-color:@(Server.IsOnline ? "#dc3545" : "#28a745")">@(Server.IsOnline ? "Turn Off" : "Turn On")</button>
         &nbsp;
+        @if (Server.IsOnline)
+        {
+            Random random = new Random();
+            int randomNumber = random.Next(0, 500);
+            <text>@randomNumber</text>
+        }
+        else
+        {
+            <text>N/A</text>
+        }
 
-        <button type="button"  class="btn btn-link" @onclick="(() => { editServer = !editServer; })">Edit</button>
+        <button type="button"  class="btn btn-link" @onclick="(() => { editServer = !editServer; })">Edit V2</button>
 
         <button type="button" class="btn btn-primary" @onclick="(() => { DeleteServer(Server.ServerId); })">Delete</button>
+
+        <a href="servers/edit/@(Server.ServerId)">Edit</a>
         <!--blazor özle built kolaylaştırma
-            <EditForm
+        <EditForm
 
-            Model="server"
-            FormName="@($"form-server-{server.ServerId}")"
-            OnValidSubmit="@(() => { DeleteServer(server.ServerId); })">
-            <button type="submit" class="btn btn-primary">Delete</button>
+        Model="server"
+        FormName="@($"form-server-{server.ServerId}")"
+        OnValidSubmit="@(() => { DeleteServer(server.ServerId); })">
+        <button type="submit" class="btn btn-primary">Delete</button>
 
-            </EditForm>
-            -->
+        </EditForm>
+        -->
         @if (editServer)
         {
             <ServerManagement.Components.Pages.EditServer Id="this.Server.ServerId"></ServerManagement.Components.Pages.EditServer>
@@ -46,13 +59,16 @@
     </li>
 
 }
-
 @code {
 
     private bool editServer = false;
     //[SupplyParameterFromForm] //blazor formdan gelenleri server modeline inject eder
+
     [Parameter]
     public Server? Server { get; set; } 
+
+    [CascadingParameter(Name = "SelectedCity")] //parent kısmından veri çektik
+    public string? SelectedCity { get; set; }
 
     private void DeleteServer(int serverId)
     {
@@ -63,6 +79,28 @@
             ////serversa atadık uı kısmında anlık yenileyip city leri getirmesi için
             NavigationManager.NavigateTo("/servers", true);
 
+        }
+    }
+
+    private string GetBackgroundColor()
+    {
+        if (SelectedCity != null)
+        {
+            switch (this.SelectedCity)
+            {
+                case "Toronto": return "powderblue";
+                case "Montreal": return "lightgray";
+                case "Ottawa": return "palegreen";
+                case "Calgary": return "pink";
+                case "Halifax": return "white";
+                default:
+                    return "white";
+            }
+
+        }
+        else
+        {
+            return "wihte";
         }
     }
 
@@ -78,7 +116,5 @@
              server.IsOnline = !server.IsOnline;
          }
      }
-
- 
  */
 }

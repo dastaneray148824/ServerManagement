@@ -5,19 +5,22 @@
 
 @inject NavigationManager NavigationManager
 
-<CityListComponent @ref="cityListComponent"SelectCityCallback="HandleCitySelection" ></CityListComponent>
-<br/>
+<CityListComponent @ref="cityListComponent" SelectCityCallback="HandleCitySelection"></CityListComponent>
+<br />
 
 <SearchBarComponent @ref="searchBarComponent" SearchServerCallback="HandleSearchServer"></SearchBarComponent>
-<br/>
-<ServerListComponent @rendermode="InteractiveServer" CityName="@this.selectedCity" SearchFilter="@SearchFilter"></ServerListComponent>
-<ServerComponent @rendermode="InteractiveServer"></ServerComponent> 
+<br />
+
+<CascadingValue Name="SelectedCity" Value="@selectedCity">
+    <ServerListComponent @rendermode="InteractiveServer" CityName="@this.selectedCity" SearchFilter="@SearchFilter"></ServerListComponent>
+</CascadingValue>
+<ServerComponent @rendermode="InteractiveServer"></ServerComponent>
 
 <a href="/servers/add" class="btn btn-link">Add Server</a>
 
 @code {
 
-    private List<string> cities = CitiesRepository.GetCities();
+    //private List<string> cities = CitiesRepository.GetCities();
     private string selectedCity = "Toronto";
     private string SearchFilter = "";
     private CityListComponent? cityListComponent;
@@ -25,14 +28,14 @@
 
     private void HandleSearch()
     {
-    //this.servers= ServersRepository.SearchServers(serverFilter);
-    // this.selectedCity=String.Empty;
+        //this.servers= ServersRepository.SearchServers(serverFilter);
+        // this.selectedCity=String.Empty;
     }
     private void HandleCitySelection(string cityName)
     {
         selectedCity = cityName;
         this.SearchFilter = string.Empty;
-        searchBarComponent.ClearFilter(); 
+        searchBarComponent.ClearFilter();
     }
 
     private void HandleSearchServer(string searchFilter)

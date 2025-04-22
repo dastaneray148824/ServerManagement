@@ -1,18 +1,12 @@
 ﻿@inject NavigationManager NavigationManager
 
-@if (this.servers != null && this.servers.Count>0)
-{
-    <ul class="list-group mb-4">
-        <!--Virtualize Items="this.servers" Context="server">
-        </Virtualize> çok fazla veriyi aynı anda güncellemesin sistem sıkışmasın
-        -->
-        @foreach (var server in servers)
-        {
+<ul class="list-group mb-4">
+    <RepeaterComponent Items="this.servers">
+        <Row Context="server">
             <ServerComponent Server="server"></ServerComponent>
-        }
-
-    </ul>
-}
+        </Row>
+    </RepeaterComponent>
+</ul>
 
 @code {
     [Parameter]
@@ -33,4 +27,4 @@
             servers = ServersRepository.SearchServers(this.SearchFilter);
         }
     }
-}
+    }
