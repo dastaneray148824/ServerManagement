@@ -43,7 +43,8 @@
             ServersRepository.AddServer(server);
 
         }
-        NavigationManager.NavigateTo("/servers");
+        NavigationManager.NavigateTo($"/servers/back_from/{this.server?.City}");
+
         
     }
 

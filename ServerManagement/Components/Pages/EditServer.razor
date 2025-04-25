@@ -1,14 +1,18 @@
 ﻿@page "/servers/edit/{id:int}"
 @using System.Runtime.CompilerServices
+@using Microsoft.JSInterop;
+
 
 @inject NavigationManager NavigationManager
-<!--dependency injection-->
+@inject IJSRuntime JsRuntime
+
+<NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation" ConfirmExternalNavigation="true"></NavigationLock> <!--navigation lock çıkmadan önceki uyarı-->
+
 <h3>EditServer</h3>
 <br/>
 <br/>
 @if (server != null)
 {
-   
 
     <EditForm Model="server" FormName="formServer" OnValidSubmit="Submit">
         <!--hata mesajları-->
@@ -16,7 +20,7 @@
         <ValidationSummary></ValidationSummary>
 
         <InputNumber @bind-Value="server.ServerId" hidden></InputNumber>
-        
+
         <FieldComponent Label="Name">
             <Control>
                 <InputText @bind-Value="server.Name" class=" form-control"></InputText>
@@ -54,7 +58,6 @@
 }
 
 
-
 @code {
     [Parameter]
     //id değişkenine atandı
@@ -76,8 +79,8 @@
         {
             //eğer kod bitme şansı varsa direk orada kes
             if (server == null) throw new Exception();
-          
-           
+
+
             var existing = ServersRepository.GetServerById(server.ServerId);
             // formda değişiklik olmadığını başka nasıl anlarız (DTO)
             if (existing.Name == server.Name && existing.IsOnline == server.IsOnline && existing.City == server.City)
@@ -86,14 +89,26 @@
                 return;
             }
             ServersRepository.UpdateServer(server.ServerId, server);
-            NavigationManager.NavigateTo("/servers");
+            NavigationManager.NavigateTo($"/servers/back_from/{this.server?.City}");
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
             throw;
         }
-      //  NavigationManager.NavigateTo("/servers");
+        //  NavigationManager.NavigateTo("/servers");
         //submit sonrası yönlendirme
     }
+
+    private async Task OnBeforeInternalNavigation(LocationChangingContext context)
+    {
+       var isConfirmed= await JsRuntime.InvokeAsync<bool>("confirm", "Are You Sure");
+
+      if (!isConfirmed)
+      {
+          context.PreventNavigation();
+      }
+    }
+
+    
 }

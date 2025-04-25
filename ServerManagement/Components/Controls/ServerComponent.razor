@@ -1,6 +1,7 @@
 ﻿@using System.Diagnostics.Eventing.Reader
 @inject NavigationManager NavigationManager
 
+
 @if (Server != null)
 {
     <!---<EditForm Model="server" FormName="serverComponent" OnSubmit="ChangeServerStatus">
@@ -18,28 +19,40 @@
 
     </EditForm>
     -->
-    <li class="d-flex justify-content-between align-items-center mb-3" @key="Server.ServerId" style="background-color:@GetBackgroundColor()">
-        @Server.Name in @Server.City
-        <span style="color :@((Server.IsOnline ? "green" : "red"))">
+    <tr @key="Server.ServerId" style="padding: 8px 0; background-color:@GetBackgroundColor()">
+
+        <td>
+            @Server.Name
+        </td>
+        <td>
+            @Server.City
+        </td>
+        <td style="color :@((Server.IsOnline ? "green" : "red"))">
             @(Server.IsOnline ? "online" : "offline")
-        </span>
-        &nbsp;
-        <button type="button" class="btn btn-sm fw-semibold text-white border-0" @onclick="(() => {Server.IsOnline = !Server.IsOnline ;})" style="background-color:@(Server.IsOnline ? "#dc3545" : "#28a745")">@(Server.IsOnline ? "Turn Off" : "Turn On")</button>
-        &nbsp;
-        @if (Server.IsOnline)
-        {
-            Random random = new Random();
-            int randomNumber = random.Next(0, 500);
-            <text>@randomNumber</text>
-        }
-        else
-        {
-            <text>N/A</text>
-        }
+        </td>
 
-        <button type="button"  class="btn btn-link" @onclick="(() => { editServer = !editServer; })">Edit V2</button>
+        <td>
+            @if (Server.IsOnline)
+            {
+                Random random = new Random();
+                int randomNumber = random.Next(0, 500);
+                <text>@randomNumber</text>
+            }
+            else
+            {
+                <text>N/A</text>
+            }
+        </td>
+        <button type="button" class="btn btn-sm fw-semibold text-white border-0" @onclick="(() => { Server.IsOnline = !Server.IsOnline; })" style="background-color:@(Server.IsOnline ? "#dc3545" : "#28a745")">@(Server.IsOnline ? "Turn Off" : "Turn On")</button>
 
-        <button type="button" class="btn btn-primary" @onclick="(() => { DeleteServer(Server.ServerId); })">Delete</button>
+        <td>
+            <button type="button" class="btn btn-link" @onclick="(() => { editServer = !editServer; })">Edit V2</button>
+        </td>
+        
+        <td>
+            <button type="button" class="btn btn-primary" style="background-color:#007bff; color:white; border:none;" @onclick="(() => { DeleteServer(Server.ServerId); })">Delete</button>
+        </td>
+        
 
         <a href="servers/edit/@(Server.ServerId)">Edit</a>
         <!--blazor özle built kolaylaştırma
@@ -56,7 +69,7 @@
         {
             <ServerManagement.Components.Pages.EditServer Id="this.Server.ServerId"></ServerManagement.Components.Pages.EditServer>
         }
-    </li>
+    </tr>
 
 }
 @code {
@@ -77,8 +90,9 @@
             ServersRepository.DeleteServer(serverId);
             //this.servers = ServersRepository.GetServersByCity(selectedCity);
             ////serversa atadık uı kısmında anlık yenileyip city leri getirmesi için
-            NavigationManager.NavigateTo("/servers", true);
-
+            
+            
+            NavigationManager.NavigateTo($"/servers/back_from/{this.SelectedCity}", forceLoad: true);
         }
     }
 
@@ -100,7 +114,7 @@
         }
         else
         {
-            return "wihte";
+            return "white";
         }
     }
 
@@ -112,7 +126,7 @@
     /* private void ChangeServerStatus()
      {
          if (server != null)
-         {
+         { 
              server.IsOnline = !server.IsOnline;
          }
      }

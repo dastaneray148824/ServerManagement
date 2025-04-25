@@ -1,11 +1,12 @@
 ﻿@page "/servers"
+@page "/servers/back_from/{cityName}"
 @using System.Diagnostics
 @using Microsoft.AspNetCore.SignalR
 @rendermode InteractiveServer
 
 @inject NavigationManager NavigationManager
 
-<CityListComponent @ref="cityListComponent" SelectCityCallback="HandleCitySelection"></CityListComponent>
+<CityListComponent @ref="cityListComponent" SelectCityCallback="HandleCitySelection" selectedCity="@this.selectedCity"></CityListComponent>
 <br />
 
 <SearchBarComponent @ref="searchBarComponent" SearchServerCallback="HandleSearchServer"></SearchBarComponent>
@@ -19,7 +20,7 @@
 <a href="/servers/add" class="btn btn-link">Add Server</a>
 
 @code {
-
+    [Parameter] public string CityName { get; set; }
     //private List<string> cities = CitiesRepository.GetCities();
     private string selectedCity = "Toronto";
     private string SearchFilter = "";
@@ -42,6 +43,19 @@
     {
         this.SearchFilter = searchFilter;
         cityListComponent.ClearSelection();
+    }
+
+    protected override void OnAfterRender(bool firstrender)
+    {
+        if (firstrender)
+        {
+            if (NavigationManager.Uri.Contains("back_from") && !string.IsNullOrEmpty(CityName))
+            {
+                selectedCity = CityName;
+                StateHasChanged();
+            }
+
+        }
     }
 }
 
