@@ -1,5 +1,5 @@
 ﻿@page "/servers"
-@page "/servers/back_from/{cityName}"
+@page "/servers/back_from/{CityName}"
 @using System.Diagnostics
 @using Microsoft.AspNetCore.SignalR
 @rendermode InteractiveServer
@@ -8,16 +8,15 @@
 
 <CityListComponent @ref="cityListComponent" SelectCityCallback="HandleCitySelection" selectedCity="@this.selectedCity"></CityListComponent>
 <br />
-
 <SearchBarComponent @ref="searchBarComponent" SearchServerCallback="HandleSearchServer"></SearchBarComponent>
 <br />
-
 <CascadingValue Name="SelectedCity" Value="@selectedCity">
     <ServerListComponent @rendermode="InteractiveServer" CityName="@this.selectedCity" SearchFilter="@SearchFilter"></ServerListComponent>
 </CascadingValue>
+
 <ServerComponent @rendermode="InteractiveServer"></ServerComponent>
 
-<a href="/servers/add" class="btn btn-link">Add Server</a>
+<a href="/servername" class="btn btn-link">Add Server</a>
 
 @code {
     [Parameter] public string CityName { get; set; }
@@ -32,6 +31,7 @@
         //this.servers= ServersRepository.SearchServers(serverFilter);
         // this.selectedCity=String.Empty;
     }
+
     private void HandleCitySelection(string cityName)
     {
         selectedCity = cityName;
@@ -49,7 +49,7 @@
     {
         if (firstrender)
         {
-            if (NavigationManager.Uri.Contains("back_from") && !string.IsNullOrEmpty(CityName))
+            if (NavigationManager.Uri.Contains("back_from") && !string.IsNullOrEmpty(CityName)) // 
             {
                 selectedCity = CityName;
                 StateHasChanged();

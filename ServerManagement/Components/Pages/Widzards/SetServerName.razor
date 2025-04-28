@@ -1,0 +1,41 @@
+﻿@page "/servername"
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+
+<h3>SetServerName</h3>
+<br/>
+@if (!string.IsNullOrWhiteSpace(errormessage))
+{
+    <div class="alert-danger">
+        @errormessage
+    </div>
+}
+    <FieldComponent Label="Name">
+        <Control>
+            <input type="text" @bind-value="serverName" class="form-control"/>
+        </Control>
+    </FieldComponent>
+    <button type="button"class="btn btn-primary"@onclick="GoNext">Next</button>
+
+@code {
+    private string? errormessage;
+    private string? serverName;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
+    private void GoNext()
+    {
+            if (string.IsNullOrWhiteSpace(serverName))
+            {
+                errormessage = "Server Name is required";
+            }
+            else
+            {
+                NavigationManager.NavigateTo($"/cityname?servername={serverName}");//serverName
+            }
+    }
+}

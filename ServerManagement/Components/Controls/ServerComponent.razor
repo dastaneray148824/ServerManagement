@@ -52,9 +52,8 @@
         <td>
             <button type="button" class="btn btn-primary" style="background-color:#007bff; color:white; border:none;" @onclick="(() => { DeleteServer(Server.ServerId); })">Delete</button>
         </td>
-        
 
-        <a href="servers/edit/@(Server.ServerId)">Edit</a>
+        <a href="server/@(Server.ServerId)">Edit</a>
         <!--blazor özle built kolaylaştırma
         <EditForm
 
@@ -76,7 +75,6 @@
 
     private bool editServer = false;
     //[SupplyParameterFromForm] //blazor formdan gelenleri server modeline inject eder
-
     [Parameter]
     public Server? Server { get; set; } 
 
@@ -118,17 +116,4 @@
         }
     }
 
-    //protected override void OnParametersSet()
-   // {
-      //  server ??= new Server { Name = "Server 1", City = "Toronto" };
-    //}
-
-    /* private void ChangeServerStatus()
-     {
-         if (server != null)
-         { 
-             server.IsOnline = !server.IsOnline;
-         }
-     }
- */
 }
