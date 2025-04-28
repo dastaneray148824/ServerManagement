@@ -28,12 +28,10 @@
             if (string.IsNullOrWhiteSpace(ServerName))
             {
                 this.errormessage = "Server Name wasn't provided";
-                return;
             }
             else if(string.IsNullOrWhiteSpace(CityName))
             {
                 this.errormessage = "City Name wasn't provided";
-                return;
             }
             StateHasChanged();
         }
@@ -41,14 +39,25 @@
 
     private void Save()
     {
-        var server = new Server()
+        if (string.IsNullOrWhiteSpace(ServerName))
+        {
+            this.errormessage = "Server name wasn't provided";
+        }
+        else if (string.IsNullOrWhiteSpace(CityName))
+        {
+            this.errormessage = "City Name is Required";
+        }
+        else
+        {
+            var server = new Server()
             {
                 Name = this.ServerName,
                 City = this.CityName,
                 IsOnline = this.isOnline
             };
-        ServersRepository.AddServer(server);
-        NavigationManager.NavigateTo($"servers/back_from/{CityName}");
-    }
+            ServersRepository.AddServer(server);
+            NavigationManager.NavigateTo($"servers/back_from/{CityName}");
+        }
 
+    }
 }

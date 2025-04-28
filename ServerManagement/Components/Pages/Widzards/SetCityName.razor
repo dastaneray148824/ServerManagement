@@ -23,10 +23,6 @@
     private string cityName;
     [SupplyParameterFromQuery] public string serverName { get; set; }
 
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-    }
     protected override void OnAfterRender(bool firstRender)
     {
         if (firstRender)
@@ -43,7 +39,6 @@
         if (string.IsNullOrWhiteSpace(serverName))
         {
             this.errorMessage = "Server name wasn't provided";
-            StateHasChanged();
         }
         else if (string.IsNullOrWhiteSpace(cityName))
         {
