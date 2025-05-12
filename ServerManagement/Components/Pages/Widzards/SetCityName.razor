@@ -1,7 +1,10 @@
 ﻿@page "/cityname"
+@using ServerManagement.StateStore
 
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
+@inject SessionStorage sessionStorage
+@inherits ComponentBase
 
 <h3>SetCityName</h3>
 <br />
@@ -11,42 +14,39 @@
         @errorMessage
     </div>
 }
-<FieldComponent Label="City">
-    <Control>
-        <input type="text" @bind-value="cityName" class="form-control"/>
-    </Control>
-</FieldComponent>
-<br />
-<button type="button" class="btn btn-primary" @onclick="GoNext">Next</button>
-@code {
-    private string errorMessage;
-    private string cityName;
-    [SupplyParameterFromQuery] public string serverName { get; set; }
+@if (server is not null)
+{
+    <FieldComponent Label="City">
+        <Control>
+            <input type="text" @bind-value="server.City" class="form-control"/>
+        </Control>
+    </FieldComponent>
+    <br />
+    <button type="button" class="btn btn-primary" @onclick="GoNext">Next</button>
+}
 
-    protected override void OnAfterRender(bool firstRender)
+@code {
+    private Server? server;
+    private string errorMessage;
+   
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            if (string.IsNullOrWhiteSpace(serverName))
-            {
-                this.errorMessage = "Server name wasn't provided";
-                StateHasChanged();
-            }
+            this.server = await this.sessionStorage.GetServerAsync();
+            StateHasChanged();
         }
     }
-    private void GoNext()
+    private async Task GoNext()
     {
-        if (string.IsNullOrWhiteSpace(serverName))
+        if (string.IsNullOrWhiteSpace(server.City))
         {
             this.errorMessage = "Server name wasn't provided";
         }
-        else if (string.IsNullOrWhiteSpace(cityName))
-        {
-           this.errorMessage = "City Name is Required";
-        }
         else
         {
-            NavigationManager.NavigateTo($"/serverstatus?servername={serverName}&cityname={cityName}");
+            await sessionStorage.SetServerAsync(server);
+            NavigationManager.NavigateTo("/serverstatus");
         }
     }
 }

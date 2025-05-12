@@ -1,10 +1,19 @@
 using ServerManagement.Components;
+using ServerManagement.StateStore;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents().AddInteractiveServerComponents(); //render için
+
+builder.Services.AddTransient<SessionStorage>();
+//builder.Services.AddScoped<ContainerStorage>();
+builder.Services.AddScoped<TorontoOnlineServerStore>();
+builder.Services.AddScoped<MontrealOnlineServerStore>();
+builder.Services.AddScoped<CalgaryOnlineServerStore>();
+builder.Services.AddScoped<OttawaOnlineServerStore>();
+builder.Services.AddScoped<HalifaxOnlineServerStore>();
 
 var app = builder.Build();
 

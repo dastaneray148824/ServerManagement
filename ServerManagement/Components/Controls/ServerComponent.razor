@@ -1,6 +1,7 @@
 ﻿@using System.Diagnostics.Eventing.Reader
+@using ServerManagement.StateStore
 @inject NavigationManager NavigationManager
-
+@inject TorontoOnlineServerStore TorontoOnlineServerStore
 
 @if (Server != null)
 {
@@ -41,12 +42,18 @@
                 <text>N/A</text>
             }
         </td>
-        <button type="button" class="btn btn-sm fw-semibold text-white border-0" @onclick="(() => { Server.IsOnline = !Server.IsOnline; })" style="background-color:@(Server.IsOnline ? "#dc3545" : "#28a745")">@(Server.IsOnline ? "Turn Off" : "Turn On")</button>
-
+        @if (Server.IsOnline)
+        {
+            <button type="button" class="btn btn-outline-danger" @onclick="@(() => { SetServerStatus(false);})">Turn Off</button>
+        }
+        else
+        {
+            <button type="button" class="btn btn-outline-success" @onclick="@(() => { SetServerStatus(true);})">Turn on</button>
+        }
         <td>
             <button type="button" class="btn btn-link" @onclick="(() => { editServer = !editServer; })">Edit V2</button>
         </td>
-        
+
         <td>
             <button type="button" class="btn btn-primary" style="background-color:#007bff; color:white; border:none;" @onclick="(() => { DeleteServer(Server.ServerId); })">Delete</button>
         </td>
@@ -74,7 +81,7 @@
     private bool editServer = false;
     //[SupplyParameterFromForm] //blazor formdan gelenleri server modeline inject eder
     [Parameter]
-    public Server? Server { get; set; } 
+    public Server? Server { get; set; }
 
     [CascadingParameter(Name = "SelectedCity")] //parent kısmından veri çektik
     public string? SelectedCity { get; set; }
@@ -86,8 +93,8 @@
             ServersRepository.DeleteServer(serverId);
             //this.servers = ServersRepository.GetServersByCity(selectedCity);
             ////serversa atadık uı kısmında anlık yenileyip city leri getirmesi için
-            
-            
+
+
             NavigationManager.NavigateTo($"/servers/back_from/{this.SelectedCity}", forceLoad: true);
         }
     }
@@ -113,5 +120,26 @@
             return "white";
         }
     }
+
+    private void SetServerStatus(bool status)
+    {
+        if (Server is not null)
+        {
+            if (this.Server.IsOnline != status)
+            {
+                if (this.Server.City.Equals("Toronto", StringComparison.OrdinalIgnoreCase))
+                {
+                    var num = TorontoOnlineServerStore.GetNumberServersOnline();
+                    if (status)
+                        TorontoOnlineServerStore.SetNumberServersOnline(num + 1);
+                    else if (num > 1)
+                        TorontoOnlineServerStore.SetNumberServersOnline(num - 1);
+                }
+                this.Server.IsOnline = status;
+            }
+        }
+
+    }
+
 
 }

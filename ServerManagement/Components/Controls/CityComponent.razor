@@ -1,13 +1,23 @@
-﻿<div class="col-6 col-sm-4 col-md-3 col-lg-2">
+﻿@using ServerManagement.StateStore
+
+@implements IDisposable;
+
+@inject TorontoOnlineServerStore TorontoOnlineServerStore
+@inject OttawaOnlineServerStore OttawaOnlineServerStore
+@inject MontrealOnlineServerStore MontrealOnlineServerStore
+@inject CalgaryOnlineServerStore CalgaryOnlineServerStore
+@inject HalifaxOnlineServerStore HalifaxOnlineServerStore
+@rendermode InteractiveServer
+<div class="col-6 col-sm-4 col-md-3 col-lg-2">
     <div class="card h-100 shadow-sm border @((selectedCity == city) ? "border-primary border-3" : "")">
 
         <!-- Sabit yükseklikte image container -->
         <div style="height: 150px; overflow: hidden;">
             <img src="@($"/images/{city}.jpeg")"
-            class="card-img-top"
-            alt="@city"
-            style="width: 100%; height: 100%; object-fit: cover;"
-            onerror="this.src='/images/placeholder.jpg'" />
+                 class="card-img-top"
+                 alt="@city"
+                 style="width: 100%; height: 100%; object-fit: cover;"
+                 onerror="this.src='/images/placeholder.jpg'" />
         </div>
 
         <!-- Buton hizalı -->
@@ -16,11 +26,39 @@
                 @city
             </button>
         </div>
+        <div>
+            @if (city.Equals("Toronto", StringComparison.OrdinalIgnoreCase))
+            {
+                <text>Online Sayısı:@numberServersOnlineToronto</text>
+            }
+            @if (city.Equals("Halifax", StringComparison.OrdinalIgnoreCase))
+            {
+                <text>Online Sayısı:@numberServersOnlineHalifax</text>
+            }
+            @if (city.Equals("Ottawa", StringComparison.OrdinalIgnoreCase))
+            {
+                <text>Online Sayısı:@numberServersOnlineOttawa</text>
+            }
+            @if (city.Equals("Montreal", StringComparison.OrdinalIgnoreCase))
+            {
+                <text>Online Sayısı:@numberServersOnlineMontreal</text>
+            }
+            @if (city.Equals("Calgary", StringComparison.OrdinalIgnoreCase))
+            {
+                <text>Online Sayısı:@numberServersOnlineCalgary</text>
+            }
+        </div>
     </div>
 </div>
 
 @code {
-    [Parameter] 
+    private int numberServersOnlineToronto;
+    private int numberServersOnlineMontreal;
+    private int numberServersOnlineCalgary;
+    private int numberServersOnlineOttawa;
+    private int numberServersOnlineHalifax;
+
+    [Parameter]
     public string selectedCity { get; set; } = "Toronto";
 
     [Parameter]
@@ -33,4 +71,85 @@
     {
         SelectCityCallback.InvokeAsync(cityName);
     }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            switch (city)
+            {
+                case "Toronto":
+                    numberServersOnlineToronto = TorontoOnlineServerStore.GetNumberServersOnline();
+                    TorontoOnlineServerStore.AddStateChangeListeners(OnTorontoServerStatusChange);
+                    break;
+                case "Montreal":
+                    numberServersOnlineMontreal = MontrealOnlineServerStore.GetNumberServersOnline();
+                    MontrealOnlineServerStore.AddStateChangeListeners(OnMontrealServerStatusChange);
+                    break;
+                case "Ottawa":
+                    numberServersOnlineOttawa = OttawaOnlineServerStore.GetNumberServersOnline();
+                    OttawaOnlineServerStore.AddStateChangeListeners(OnOttawaServerStatusChange);
+                    break;
+                case "Calgary":
+                    numberServersOnlineCalgary = CalgaryOnlineServerStore.GetNumberServersOnline();
+                    CalgaryOnlineServerStore.AddStateChangeListeners(OnCalgaryServerStatusChange);
+                    break;
+                case "Halifax":
+                    numberServersOnlineHalifax = HalifaxOnlineServerStore.GetNumberServersOnline();
+                    HalifaxOnlineServerStore.AddStateChangeListeners(OnHalifaxServerStatusChange);
+                    break;
+            }
+
+            StateHasChanged();
+        }
+    }
+
+    private void OnTorontoServerStatusChange()
+    {
+        numberServersOnlineToronto = TorontoOnlineServerStore.GetNumberServersOnline();
+        StateHasChanged();
+    }
+    private void OnHalifaxServerStatusChange()
+    {
+        numberServersOnlineHalifax = HalifaxOnlineServerStore.GetNumberServersOnline();
+        StateHasChanged();
+    }
+    private void OnMontrealServerStatusChange()
+    {
+        numberServersOnlineMontreal = MontrealOnlineServerStore.GetNumberServersOnline();
+        StateHasChanged();
+    }
+    private void OnOttawaServerStatusChange()
+    {
+        numberServersOnlineOttawa = OttawaOnlineServerStore.GetNumberServersOnline();
+        StateHasChanged();
+    }
+    private void OnCalgaryServerStatusChange()
+    {
+        numberServersOnlineCalgary = CalgaryOnlineServerStore.GetNumberServersOnline();
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        switch (city)
+        {
+            case "Toronto":
+                TorontoOnlineServerStore.RemoveStateChangeListeners(OnTorontoServerStatusChange);
+                break;
+            case "Montreal":
+                MontrealOnlineServerStore.RemoveStateChangeListeners(OnMontrealServerStatusChange);
+                break;
+            case "Ottawa":
+                OttawaOnlineServerStore.RemoveStateChangeListeners(OnOttawaServerStatusChange);
+                break;
+            case "Calgary":
+                CalgaryOnlineServerStore.RemoveStateChangeListeners(OnCalgaryServerStatusChange);
+                break;
+            case "Halifax":
+                HalifaxOnlineServerStore.RemoveStateChangeListeners(OnHalifaxServerStatusChange);
+                break;
+        }
+    }
+
 }

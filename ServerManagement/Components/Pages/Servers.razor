@@ -2,8 +2,13 @@
 @page "/servers/back_from/{CityName}"
 @using System.Diagnostics
 @using Microsoft.AspNetCore.SignalR
+@using ServerManagement.StateStore
 @rendermode InteractiveServer
-
+@inject TorontoOnlineServerStore TorontoOnlineServerStore
+@inject OttawaOnlineServerStore OttawaOnlineServerStore
+@inject CalgaryOnlineServerStore CalgaryOnlineServerStore
+@inject MontrealOnlineServerStore MontrealOnlineServerStore
+@inject HalifaxOnlineServerStore HalifaxOnlineServerStore
 @inject NavigationManager NavigationManager
 
 <CityListComponent @ref="cityListComponent" SelectCityCallback="HandleCitySelection" selectedCity="@this.selectedCity"></CityListComponent>
@@ -13,8 +18,6 @@
 <CascadingValue Name="SelectedCity" Value="@selectedCity">
     <ServerListComponent @rendermode="InteractiveServer" CityName="@this.selectedCity" SearchFilter="@SearchFilter"></ServerListComponent>
 </CascadingValue>
-
-<ServerComponent @rendermode="InteractiveServer"></ServerComponent>
 
 <a href="/servername" class="btn btn-link">Add Server</a>
 
@@ -54,6 +57,27 @@
                 selectedCity = CityName;
                 StateHasChanged();
             }
+
+            var serversToronto = ServersRepository.GetServersByCity("Toronto");
+            if (serversToronto is not null)            
+                TorontoOnlineServerStore.SetNumberServersOnline(serversToronto.Count(x => x.IsOnline));
+
+            var serversMontreal = ServersRepository.GetServersByCity("Montreal");
+            if (serversMontreal is not null)
+                MontrealOnlineServerStore.SetNumberServersOnline(serversMontreal.Count(x => x.IsOnline));
+
+            var serversOttawa = ServersRepository.GetServersByCity("Ottawa");
+            if (serversOttawa is not null)
+                OttawaOnlineServerStore.SetNumberServersOnline(serversOttawa.Count(x => x.IsOnline));
+            
+            var serversCalgary = ServersRepository.GetServersByCity("Calgary");
+            if (serversCalgary is not null)
+                CalgaryOnlineServerStore.SetNumberServersOnline(serversCalgary.Count(x => x.IsOnline));
+
+            var serversHalifax = ServersRepository.GetServersByCity("Halifax");
+            if (serversHalifax is not null)
+                HalifaxOnlineServerStore.SetNumberServersOnline(serversHalifax.Count(x => x.IsOnline));
+        }
 
         }
     }
