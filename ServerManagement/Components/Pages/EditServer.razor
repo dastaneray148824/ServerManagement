@@ -1,7 +1,7 @@
 ﻿@page "/servers/edit/{id:int}"
 @using System.Runtime.CompilerServices
 @using Microsoft.JSInterop;
-
+@inject IServerEFCoreRepository serverEFCoreRepository
 
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JsRuntime

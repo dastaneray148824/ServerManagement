@@ -28,9 +28,8 @@ namespace ServerManagement.Models
         public List<Server> GetServersByCity(string cityName)
         {
             using var db = contextFactory.CreateDbContext();
-            return db.Servers
-                .Where(s => s.City.Equals(cityName, StringComparison.OrdinalIgnoreCase))
-                .ToList();
+            return db.Servers.Where(s => s.City == cityName).ToList();
+
         }
 
         public Server GetServerById(int id)

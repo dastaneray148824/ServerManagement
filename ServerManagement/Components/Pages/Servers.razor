@@ -10,6 +10,7 @@
 @inject MontrealOnlineServerStore MontrealOnlineServerStore
 @inject HalifaxOnlineServerStore HalifaxOnlineServerStore
 @inject NavigationManager NavigationManager
+@inject IServerEFCoreRepository serverEFCoreRepository
 
 <CityListComponent @ref="cityListComponent" SelectCityCallback="HandleCitySelection" selectedCity="@this.selectedCity"></CityListComponent>
 <br />

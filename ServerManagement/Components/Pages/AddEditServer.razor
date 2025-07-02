@@ -1,6 +1,7 @@
 ﻿@page "/server/{id:int?}"
 @using System.Diagnostics.Eventing.Reader
 @inject NavigationManager NavigationManager
+@inject IServerEFCoreRepository serverEFCoreRepository
 @if (Id.HasValue)
 {
     <h3>Edit Server</h3>
