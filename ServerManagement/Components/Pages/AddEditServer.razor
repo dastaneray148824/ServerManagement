@@ -69,7 +69,7 @@ else
     {
         if (this.Id.HasValue)
 
-            server ??= ServersRepository.GetServerById(this.Id.Value);
+            server ??= serverEFCoreRepository.GetServerById(this.Id.Value);
         else
             server ??= new Server() { IsOnline = false };
     }
@@ -84,16 +84,16 @@ else
             {
                 if (this.Id.HasValue)
                 {
-                    var existing = ServersRepository.GetServerById(server.ServerId);
+                    var existing = serverEFCoreRepository.GetServerById(server.ServerId);
                     if (existing.Name == server.Name && existing.IsOnline == server.IsOnline && existing.City == server.City)
                     {
                         InfoMessage = "No changes made to the server.";
                         return;
                     }
-                    ServersRepository.UpdateServer(server.ServerId, server);
+                    serverEFCoreRepository.UpdateServer(server.ServerId, server);
                 }
                 else
-                    ServersRepository.AddServer(server);
+                    serverEFCoreRepository.AddServer(server);
             }
             NavigationManager.NavigateTo($"/servers/back_from/{this.server?.City}");
         }

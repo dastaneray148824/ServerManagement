@@ -53,7 +53,7 @@
 }
 
 @code {
-    private List<Server>? servers = ServersRepository.GetServers();
+    private List<Server>? servers = serverEFCoreRepository.GetServers();
 
     private PaginationState paginationState = new PaginationState { ItemsPerPage = 5 };
 
@@ -61,8 +61,8 @@
     {
         if (serverId > 0)
         {
-            ServersRepository.DeleteServer(serverId);
-            //this.servers = ServersRepository.GetServersByCity(selectedCity);
+            serverEFCoreRepository.DeleteServer(serverId);
+            //this.servers = serverEFCoreRepository.GetServersByCity(selectedCity);
             ////serversa atadık uı kısmında anlık yenileyip city leri getirmesi için
             NavigationManager.NavigateTo("/quickgrid", true);
 

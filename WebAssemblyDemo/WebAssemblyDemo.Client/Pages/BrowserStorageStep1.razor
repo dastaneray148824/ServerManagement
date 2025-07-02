@@ -1,0 +1,23 @@
+﻿@page "/browser_wasm_1"
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+@rendermode InteractiveWebAssembly
+
+<h3>BrowserStorageStep1</h3>
+
+<br />
+<br />
+
+<input type="text" class="form-control" @bind-value="data" />
+<button type="button" class="btn btn-primary" @onclick="Gonext"></button>
+
+@code {
+    private string data = "";
+
+    private async Task Gonext()
+    {
+        await JSRuntime.InvokeVoidAsync("SessionStorage.setItem", "demo-data", data);
+        NavigationManager.NavigateTo("/browser_wasm_2");
+    }
+
+}

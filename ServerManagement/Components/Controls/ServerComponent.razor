@@ -2,7 +2,7 @@
 @using ServerManagement.StateStore
 @inject NavigationManager NavigationManager
 @inject TorontoOnlineServerStore TorontoOnlineServerStore
-
+@inject IServerEFCoreRepository serverEFCoreRepository
 @if (Server != null)
 {
     <!---<EditForm Model="server" FormName="serverComponent" OnSubmit="ChangeServerStatus">
@@ -90,8 +90,8 @@
     {
         if (serverId > 0)
         {
-            ServersRepository.DeleteServer(serverId);
-            //this.servers = ServersRepository.GetServersByCity(selectedCity);
+            serverEFCoreRepository.DeleteServer(serverId);
+            //this.servers = serverEFCoreRepository.GetServersByCity(selectedCity);
             ////serversa atadık uı kısmında anlık yenileyip city leri getirmesi için
 
 

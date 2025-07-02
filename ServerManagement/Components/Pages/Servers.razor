@@ -31,7 +31,7 @@
 
     private void HandleSearch()
     {
-        //this.servers= ServersRepository.SearchServers(serverFilter);
+        //this.servers= serverEFCoreRepository.SearchServers(serverFilter);
         // this.selectedCity=String.Empty;
     }
 
@@ -58,23 +58,23 @@
                 StateHasChanged();
             }
 
-            var serversToronto = ServersRepository.GetServersByCity("Toronto");
+            var serversToronto = serverEFCoreRepository.GetServersByCity("Toronto");
             if (serversToronto is not null)            
                 TorontoOnlineServerStore.SetNumberServersOnline(serversToronto.Count(x => x.IsOnline));
 
-            var serversMontreal = ServersRepository.GetServersByCity("Montreal");
+            var serversMontreal = serverEFCoreRepository.GetServersByCity("Montreal");
             if (serversMontreal is not null)
                 MontrealOnlineServerStore.SetNumberServersOnline(serversMontreal.Count(x => x.IsOnline));
 
-            var serversOttawa = ServersRepository.GetServersByCity("Ottawa");
+            var serversOttawa = serverEFCoreRepository.GetServersByCity("Ottawa");
             if (serversOttawa is not null)
                 OttawaOnlineServerStore.SetNumberServersOnline(serversOttawa.Count(x => x.IsOnline));
             
-            var serversCalgary = ServersRepository.GetServersByCity("Calgary");
+            var serversCalgary = serverEFCoreRepository.GetServersByCity("Calgary");
             if (serversCalgary is not null)
                 CalgaryOnlineServerStore.SetNumberServersOnline(serversCalgary.Count(x => x.IsOnline));
 
-            var serversHalifax = ServersRepository.GetServersByCity("Halifax");
+            var serversHalifax = serverEFCoreRepository.GetServersByCity("Halifax");
             if (serversHalifax is not null)
                 HalifaxOnlineServerStore.SetNumberServersOnline(serversHalifax.Count(x => x.IsOnline));
         }

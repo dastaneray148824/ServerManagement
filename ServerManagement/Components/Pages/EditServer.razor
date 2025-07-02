@@ -27,7 +27,7 @@
     protected override void OnParametersSet()
     {
         //?? null ise atama yap , sayfa parametreleri ile gelen id'yi kullanarak server nesnesini bul
-        server ??= ServersRepository.GetServerById(this.Id);
+        server ??= serverEFCoreRepository.GetServerById(this.Id);
     }
 
     private void Submit()
@@ -39,14 +39,14 @@
             if (server == null) throw new Exception();
 
 
-            var existing = ServersRepository.GetServerById(server.ServerId);
+            var existing = serverEFCoreRepository.GetServerById(server.ServerId);
             // formda değişiklik olmadığını başka nasıl anlarız (DTO)
             if (existing.Name == server.Name && existing.IsOnline == server.IsOnline && existing.City == server.City)
             {
                 InfoMessage = "No changes made to the server.";
                 return;
             }
-            ServersRepository.UpdateServer(server.ServerId, server);
+            serverEFCoreRepository.UpdateServer(server.ServerId, server);
             NavigationManager.NavigateTo($"/servers/back_from/{this.server?.City}");
         }
         catch (Exception e)

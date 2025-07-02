@@ -3,10 +3,11 @@
 namespace ServerManagement.Models
 {
     //CRUD işlemleri gerçekleştiren statik bir sınıf
-    public static class ServersRepository
+    public static class serverEFCoreRepository
     {
         private static List<Server> servers = new List<Server>()
         {
+            
             new Server {  ServerId = 1, Name = "Server1", City = "Toronto" },
             new Server {  ServerId = 2, Name = "Server2", City = "Toronto" },
             new Server {  ServerId = 3, Name = "Server3", City = "Toronto" },
@@ -22,6 +23,7 @@ namespace ServerManagement.Models
             new Server {  ServerId = 13, Name = "Server13", City = "Halifax" },
             new Server {  ServerId = 14, Name = "Server14", City = "Halifax" },
             new Server {  ServerId = 15, Name = "Server15", City = "Halifax" },
+            
         };
 
         public static void AddServer(Server server)

@@ -33,11 +33,11 @@
     {
         if (string.IsNullOrWhiteSpace(this.SearchFilter)) //kullanıcı bir şey aramıyorsa
         {
-            servers = ServersRepository.GetServersByCity(CityName ?? "Toronto"); //city name yoksa torontoyu getir
+            servers = serverEFCoreRepository.GetServersByCity(CityName ?? "Toronto"); //city name yoksa torontoyu getir
         }
         else
         {
-            servers = ServersRepository.SearchServers(this.SearchFilter);
+            servers = serverEFCoreRepository.SearchServers(this.SearchFilter);
         }
     }
     }

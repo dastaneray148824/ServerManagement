@@ -40,7 +40,7 @@
         if (server is not null)
         {
             await sessionStorage.SetServerAsync(null);
-            ServersRepository.AddServer(server);
+            serverEFCoreRepository.AddServer(server);
             NavigationManager.NavigateTo($"/servers/back_from/{this.server?.City}");
         }
     }
